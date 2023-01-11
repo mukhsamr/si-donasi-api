@@ -51,11 +51,34 @@ class MidtransController extends Controller
         }
 
         $message = $this::execute(
-            try: fn () => Transaksi::where('transaction_id', $request->transaction_id)
-                ->update([
-                    'status_code' => $request->status_code,
-                    'transaction_status' => $request->transaction_status
-                ]),
+            try: function () use ($request) {
+
+                $find = Transaksi::firstWhere('transaction_id', $request->transaction_id);
+
+                if ($find) {
+
+                    // Update
+                    Transaksi::where('transaction_id', $request->transaction_id)
+                        ->update([
+                            'status_code' => $request->status_code,
+                            'transaction_status' => $request->transaction_status
+                        ]);
+                } else {
+
+                    $infaq_id = explode('-', $request->order_id)[0];
+                    $request->merge(['infaq_id' => $infaq_id]);
+
+                    // Store
+                    Transaksi::create($request->only([
+                        'infaq_id',
+                        'order_id',
+                        'status_code',
+                        'transaction_id',
+                        'transaction_status',
+                        'gross_amount',
+                    ]));
+                }
+            },
             message: 'update transaksi'
         );
 
