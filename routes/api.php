@@ -39,8 +39,9 @@ Route::prefix('berita')->controller(BeritaController::class)->name('berita')->gr
     Route::delete('/{id}', 'destroy')->name('.destroy');
 });
 
-// Berita
+// Laporan
 Route::prefix('laporan')->controller(LaporanController::class)->name('laporan')->group(function () {
+    Route::get('/bulan', 'bulan')->name('.bulan');
     Route::get('/', 'index')->name('.all');
     Route::get('/{laporan}', 'find')->name('.find');
     Route::post('/', 'store')->name('.store');

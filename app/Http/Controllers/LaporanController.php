@@ -14,6 +14,11 @@ class LaporanController extends Controller
 {
     use HasTryCatch;
 
+    public function bulan()
+    {
+        return Laporan::select('bulan')->pluck('bulan');
+    }
+
     public function index()
     {
         $all = Laporan::all();

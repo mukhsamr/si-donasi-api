@@ -18,11 +18,17 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $request->merge(['password' => bcrypt($request->password)]);
+        if ($request->password) {
+            $request->merge(['password' => bcrypt($request->password)]);
+        }
+
+        $update = $request->password
+            ? $request->only(['name', 'password'])
+            : $request->only(['name']);
 
         $message = $this::execute(
             try: fn () => User::where('id', $request->id)
-                ->update($request->only(['name', 'password'])),
+                ->update($update),
             message: 'edit user'
         );
 
