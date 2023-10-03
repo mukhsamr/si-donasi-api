@@ -17,8 +17,6 @@ trait HasTryCatch
             $cond = true;
         } catch (\Throwable $th) {
 
-            if (app()->isLocal()) dd($th);
-
             if ($catch) $catch();
 
             Log::error($th);
@@ -27,7 +25,8 @@ trait HasTryCatch
 
         return [
             'type' => $cond,
-            'message' => ($cond ? 'Berhasil ' : 'Gagal ') . $message
+            'message' => ($cond ? 'Berhasil ' : 'Gagal ') . $message,
+            'error' => $cond ? false : $th
         ];
     }
 }
